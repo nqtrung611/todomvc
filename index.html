@@ -2,32 +2,64 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>To-do List App</title>
+        <title>To-do MVC</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"/>
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <div class="container">
-            <div class="todo-app">
-                <h2>Todos</h2>
+        <div class="todo-app">
+            <header>
+                <h1>Todos</h1>
                 <form action="">
-                    <div id="new-task">
-                        <input class="todo-input" type="text" id="input-box" placeholder="Nhập công việc tại đây" autofocus>
-                        <button class="todo-button" type="submit" id="push">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                    <div class="todo-select">
-                        <div class="filter-todo">
-                            <button class="btn-option active" value="all">Tất cả</button>
-                            <button class="btn-option" value="completed">Hoàn thành</button>
-                            <button class="btn-option" value="incomplete">Chưa hoàn thành</button>
-                        </div>
-                    </div>
+                    <input class="todo-input" type="text" id="input-box" placeholder="Nhập công việc tại đây" autofocus>
+                    <button class="todo-button" type="submit" id="push">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
                 </form>
-                <div id="tasks"></div>
+            </header>
+            <div>
+                <main>
+                    <div class="toggle-all-container">
+                        <input type="checkbox" class="toggle-all">
+                        <label htmlfor="toggle-all" class="toggle-all-label">
+                            Toggle All Input
+                        </label>
+                    </div>
+                    <ul class="todo-list">
+                        <li class="completed">
+                            <div class="view">
+                                <img src="./images/unchecked.png" alt="">
+                                <label>0</label>
+                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
+                            </div>
+                        </li>
+                        <li class="completed">
+                            <div class="view">
+                                <img src="./images/unchecked.png" alt="">
+                                <label>1</label>
+                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
+                            </div>
+                        </li>
+                        <li class="completed">
+                            <div class="view">
+                                <img src="./images/unchecked.png" alt="">
+                                <label>2</label>
+                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </main>
             </div>
+            <footer class="footer">
+                <span class="todo-count"><strong>3</strong> items left </span>
+                <div class="filters">
+                    <button class="btn-option selected" value="all">All</button>
+                    <button class="btn-option" value="completed">Completed</button>
+                    <button class="btn-option" value="incomplete">Active</button>
+                </div>
+                <button type="button" class="clear-completed"> Clear Completed </button>
+            </footer>
         </div>
         <script src="script.js"></script>
     </body>

@@ -123,6 +123,10 @@ const displayTasks = () => {
             element.querySelector(".destroy").style.display = "none";
         });
     });
+
+    if (!tasks.length) {
+        document.querySelector(".footer").style.display = "none";
+    }
 };
 
 const countTask = () => {
@@ -179,17 +183,20 @@ const btnOptions = document.querySelectorAll(".btn-option");
 
 function filterTodo(e) {
     e.preventDefault();
-    btnOptions.forEach(function(btnOption) {
-        btnOption.classList.remove("selected");
-    });
     const todos = listTasks.childNodes;
     todos.forEach(function(todo) {
         switch(e.target.value) {
             case "all":
+                btnOptions.forEach(function(btnOption) {
+                    btnOption.classList.remove("selected");
+                });
                 e.target.classList.add("selected");
                 todo.style.display = "flex";
                 break;
             case "completed":
+                btnOptions.forEach(function(btnOption) {
+                    btnOption.classList.remove("selected");
+                });
                 e.target.classList.add("selected");
                 if(todo.classList.contains("completed")) {
                     todo.style.display = "flex";
@@ -198,6 +205,9 @@ function filterTodo(e) {
                 }
                 break;
             case "incomplete":
+                btnOptions.forEach(function(btnOption) {
+                    btnOption.classList.remove("selected");
+                });
                 e.target.classList.add("selected");
                 if(!todo.classList.contains("completed")) {
                     todo.style.display = "flex";

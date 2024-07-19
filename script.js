@@ -100,7 +100,31 @@ const displayTasks = () => {
                 break;
         }
     });
+    
+    tasks.forEach((element) => {
+        element.addEventListener('mouseover', function() {
+            element.querySelector(".destroy").style.display = "inline-block";
+        });
+        element.addEventListener('mouseleave', function() {
+            element.querySelector(".destroy").style.display = "none";
+        });
+    });
+    
+    if (!tasks.length) {
+        document.querySelector(".footer").style.display = "none";
+    }
+    
+    const itemsLeft = document.querySelector(".todo-count strong");
+    const itemsCompleted = document.querySelectorAll(".task.completed");
+    itemsLeft.innerText = `${tasks.length - itemsCompleted.length}`;
+    
     const clearBtn = document.querySelector(".clear-completed");
+    if (itemsCompleted.length) {
+        clearBtn.style.display = "inline-block";
+    } else {
+        clearBtn.style.display = "none";
+    }
+
     clearBtn.addEventListener('click', function() {
         let max = Object.keys(localStorage);
         for (let key of max) {
@@ -110,26 +134,9 @@ const displayTasks = () => {
             } else {
                 removeTask(key);
             }
-
+    
         }
     });
-
-    tasks.forEach((element) => {
-        element.addEventListener('mouseover', function() {
-            element.querySelector(".destroy").style.display = "inline-block";
-        });
-        element.addEventListener('mouseleave', function() {
-            element.querySelector(".destroy").style.display = "none";
-        });
-    });
-
-    if (!tasks.length) {
-        document.querySelector(".footer").style.display = "none";
-    }
-
-    const itemsLeft = document.querySelector(".todo-count strong");
-    const itemsCompleted = document.querySelectorAll(".task.completed");
-    itemsLeft.innerText = `${tasks.length - itemsCompleted.length}`;
 };
 
 //Xóa task ở local storage
@@ -162,6 +169,7 @@ const btnOptions = document.querySelectorAll(".btn-option");
 
 function filterTodo(e) {
     e.preventDefault();
+    displayTasks();
     const todos = listTasks.childNodes;
     todos.forEach(function(todo) {
         switch(e.target.value) {

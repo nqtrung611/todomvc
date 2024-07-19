@@ -12,7 +12,6 @@ window.onload = () => {
     } else {
         count = Number(tong[max-1]) + 1;
     }
-    countTask();
     displayTasks();
 };
 
@@ -127,34 +126,15 @@ const displayTasks = () => {
     if (!tasks.length) {
         document.querySelector(".footer").style.display = "none";
     }
-};
 
-const countTask = () => {
     const itemsLeft = document.querySelector(".todo-count strong");
-    let max = Object.keys(localStorage);
-    let con = 0;
-    for (let key of max) {
-        let value = localStorage.getItem(key);
-        if (!JSON.parse(value.split("_")[0])) {
-            con += 1;
-        }
-    }
-    const clearBtn = document.querySelector(".clear-completed");
-    if (con < max.length) {
-        clearBtn.style.display = "inline-block";
-    } else {
-        clearBtn.style.display = "none";
-    }
-    itemsLeft.innerText = `${con}`;
-    // if (max.length === 0) {
-    //     document.querySelector(".footer").style.display = "none";
-    // }
+    const itemsCompleted = document.querySelectorAll(".task.completed");
+    itemsLeft.innerText = `${tasks.length - itemsCompleted.length}`;
 };
 
 //Xóa task ở local storage
 const removeTask = (taskValue) => {
     localStorage.removeItem(taskValue);
-    countTask();
     displayTasks();
 };
 
@@ -162,7 +142,6 @@ const removeTask = (taskValue) => {
 const updateStorage = (index, taskValue, completed) => {
     localStorage.setItem(`${index}`, `${completed}_${taskValue}`);
     displayTasks();
-    countTask();
 };
 
 //Thêm mới, cập nhật task vào local storage

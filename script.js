@@ -2,6 +2,7 @@ const newTaskInput = document.querySelector("header input");
 const listTasks = document.querySelector(".todo-list");
 let deleteTasks, editTasks, tasks;
 let count;
+const btnSelectAll = document.querySelector(".toggle-all");
 
 window.onload = () => {
     let tong = Object.keys(localStorage);
@@ -134,10 +135,93 @@ const displayTasks = () => {
             } else {
                 removeTask(key);
             }
-    
         }
+        // if (itemsLeft.textContent === '0') {
+        //     btnSelectAll.parentElement.lastElementChild.style.display = "none";
+        // } else {
+        //     btnSelectAll.parentElement.lastElementChild.style.display = "flex";
+        // }
+    });
+
+    //Select All
+    // const btnSelected = document.querySelector(".selected");
+    // if (itemsLeft.textContent === '0') {
+    //     btnSelectAll.parentElement.lastElementChild.classList.add("selected");
+    // } else {
+    //     btnSelectAll.parentElement.lastElementChild.classList.remove("selected");
+    // }
+    // if (!tasks.length) {
+    //     btnSelectAll.parentElement.lastElementChild.style.display = "none";
+    // } else {
+    //     btnSelectAll.parentElement.lastElementChild.style.display = "flex";
+    // }
+    // btnSelectAll.addEventListener('click', function(e) {
+    //     e.preventDefault();
+    //     if (itemsCompleted.length === tasks.length) {
+    //         tasks.forEach(function(task) {
+    //             task.classList.remove("completed");
+    //             localStorage.setItem(`${task.id}`, `false_${task.innerText}`);
+    //             // updateStorage(task.id, task.innerText, false);
+    //         });
+    //         loadAgain();
+    //     } else {
+    //         tasks.forEach(function(task) {
+    //             if (!task.classList.contains("completed")) {
+    //                 task.classList.add("completed");
+    //                 localStorage.setItem(`${task.id}`, `true_${task.innerText}`);
+    //                 // updateStorage(task.id, task.innerText, true);
+    //             }
+    //         });
+    //         loadAgain();
+    //     }
+    // });
+
+    
+
+    //Edit Task 
+    // console.log(tasks);
+    tasks.forEach(function(task) {
+        task.addEventListener('dblclick', function(e) {
+            if (!(e.target.tagName === "IMG")) {
+                // console.log(task.innerText);
+                const textElement = task.querySelector("label");
+                const textEdit = textElement.textContent;
+                task.querySelector(".destroy").remove();
+                task.querySelector("img").remove();
+                const inputElement = document.createElement('input');
+                inputElement.type = 'text';
+                inputElement.setAttribute('class', 'editing');
+                inputElement.value = textElement.textContent;
+                textElement.parentNode.replaceChild(inputElement, textElement);
+                inputElement.focus();
+                inputElement.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape') {
+                        updateStorage(task.id, textEdit, false);
+                    }
+                });
+                inputElement.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        if (inputElement.value.trim() === '') {
+                            alert("Vui lòng nhập công việc");
+                            updateStorage(task.id, textEdit, false);
+                        } else {
+                            updateStorage(task.id, inputElement.value.trim(), false);
+                        }
+                        console.log("enter");
+                    }
+                });
+                inputElement.addEventListener('blur', function() {
+                    console.log("blur");
+                    updateStorage(task.id, textEdit, false);
+                });
+            }
+        });
     });
 };
+
+// const loadAgain = () => {
+//     displayTasks();
+// }
 
 //Xóa task ở local storage
 const removeTask = (taskValue) => {
@@ -169,7 +253,6 @@ const btnOptions = document.querySelectorAll(".btn-option");
 
 function filterTodo(e) {
     e.preventDefault();
-    displayTasks();
     const todos = listTasks.childNodes;
     todos.forEach(function(todo) {
         switch(e.target.value) {
@@ -204,4 +287,5 @@ function filterTodo(e) {
                 break;
         }
     });
+    displayTasks();
 }

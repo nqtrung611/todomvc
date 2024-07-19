@@ -92,6 +92,9 @@ header button {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
+.toggle-all+label.selected:before {
+    color: #000;
+}
 .todo-list {
     margin: 0;
     padding: 0;
@@ -220,6 +223,7 @@ button {
     background-position: center;
     left: 12px;
     top: 12px;
+    z-index: 999;
 }
 .todo-list li.completed img {
     background-image: url(images/checked1.png);
@@ -239,4 +243,21 @@ button {
 :focus,.toggle:focus+label,.toggle-all:focus+label {
     box-shadow: 0 0 2px 2px #cf7d7d;
     outline: 0
+}
+li input {
+    overflow-wrap: break-word;
+    /* padding: 15px 15px 15px 60px; */
+    display: block;
+    line-height: 1.2;
+    transition: color .4s;
+    font-weight: 400;
+    color: #484848;
+    width: 500px;
+    height: 60px;
+    margin-left: 50px;
+    padding-left: 10px;
+    border: none;
+}
+li .todo-button {
+    display: none;
 }

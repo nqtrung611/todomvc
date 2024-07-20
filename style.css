@@ -92,7 +92,7 @@ header button {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
-.toggle-all+label.selected:before {
+.toggle-all+label.active:before {
     color: #000;
 }
 .todo-list {

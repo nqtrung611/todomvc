@@ -242,3 +242,11 @@ li input {
 li .todo-button {
     display: none;
 }
+@media (max-width: 450px) {
+    .footer {
+        height: 75px;
+    }
+    .filters {
+        bottom: 8px;
+    }
+  }

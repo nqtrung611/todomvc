@@ -351,6 +351,7 @@ document.querySelector("#input-box").addEventListener('keydown', (event) => {
             createTask({text: `${newTaskInput.value.trim()}`, completed: false});
             newTaskInput.value = "";
         }
+        showItemsLeft();
     }
 });
 
@@ -371,7 +372,7 @@ window.onload = (e) => {
     for (let i = 0; i < todoData.length; i++) {
         createTask(todoData[i]);
     }
-
+    showItemsLeft();
 };
 
 //Render từng task
@@ -379,7 +380,8 @@ const createTask = (taskValue) => {
     console.log(taskValue);
     let innerTask = document.createElement("li");
     innerTask.classList.add("task");
-    // innerTask.setAttribute("id", index);
+    // innerTask.setAttribute("onmouseover", "showDeleteBtn(this)");
+    // innerTask.setAttribute("onmouseleave", "hiddenDeleteBtn(this)");
     innerTask.innerHTML = `
         <img alt="">
         <label>${taskValue.text}</label>
@@ -389,45 +391,65 @@ const createTask = (taskValue) => {
         innerTask.classList.add("completed");
     }
     listTasks.appendChild(innerTask);
+    showItemsLeft();
 };
 
 //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
 function filterTodo(e) {
-    console.log(e);
-    const todos = document.querySelectorAll(".task");
+    const tasks = document.querySelectorAll(".task");
     const btnSelected = document.querySelector("button.selected");
-    todos.forEach(function(todo) {
+    tasks.forEach(function(task) {
         switch(e.value) {
             case "all":
                 btnSelected.classList.remove("selected");
                 e.classList.add("selected");
-                todo.style.display = "flex";
+                task.style.display = "flex";
                 break;
             case "completed":
                 btnSelected.classList.remove("selected");
                 e.classList.add("selected");
-                if(todo.classList.contains("completed")) {
-                    todo.style.display = "flex";
+                if(task.classList.contains("completed")) {
+                    task.style.display = "flex";
                 } else {
-                    todo.style.display = "none";
+                    task.style.display = "none";
                 }
                 break;
             case "incomplete":
                 btnSelected.classList.remove("selected");
                 e.classList.add("selected");
-                if(!todo.classList.contains("completed")) {
-                    todo.style.display = "flex";
+                if(!task.classList.contains("completed")) {
+                    task.style.display = "flex";
                 } else {
-                    todo.style.display = "none";
+                    task.style.display = "none";
                 }
                 break;
         }
     });
 }
 
-//Show items left
+//Show items left, Clear Completed, Footer
 function showItemsLeft() {
     const itemsLeft = document.querySelector(".todo-count span");
-    console.log(itemsLeft);
+    const tasks = document.querySelectorAll(".task");
+    const itemsCompleted = document.querySelectorAll(".task.completed");
+    if ((tasks.length - itemsCompleted.length) < 2) {
+        itemsLeft.innerText = `${tasks.length - itemsCompleted.length} item`;
+    } else {
+        itemsLeft.innerText = `${tasks.length - itemsCompleted.length} items`;
+    }
+
+    const clearBtn = document.querySelector(".clear-completed");
+    if (itemsCompleted.length) {
+        clearBtn.style.display = "inline-block";
+    } else {
+        clearBtn.style.display = "none";
+    }
+
+    const footer = document.querySelector(".footer");
+    if (!tasks.length) {
+        footer.style.display = "none";
+    } else {
+        footer.style.display = "block";
+    }
 }
-showItemsLeft();
+

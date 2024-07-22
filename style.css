@@ -145,8 +145,12 @@ button {
     color: #949494;
     transition: color .2s ease-out;
 }
+.todo-list li:hover .delete {
+    display: inline-block;
+}
 .footer {
     padding: 10px 15px;
+    display: none;
     height: 50px;
     text-align: center;
     font-size: 15px;

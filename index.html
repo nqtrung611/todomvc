@@ -11,12 +11,7 @@
         <div class="todo-app">
             <header>
                 <h1>Todos</h1>
-                <form action="">
-                    <input class="todo-input" type="text" id="input-box" placeholder="Nhập công việc tại đây" autofocus>
-                    <button class="todo-button" type="submit" id="push">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </form>
+                <input class="todo-input" type="text" id="input-box" placeholder="Nhập công việc tại đây" autofocus>
             </header>
             <div>
                 <main>
@@ -27,36 +22,15 @@
                         </label>
                     </div>
                     <ul class="todo-list">
-                        <!-- <li class="completed">
-                            <div class="view">
-                                <img src="" alt="">
-                                <label>0</label>
-                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
-                            </div>
-                        </li>
-                        <li class="completed">
-                            <div class="view">
-                                <img src="" alt="">
-                                <label>1</label>
-                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
-                            </div>
-                        </li>
-                        <li class="completed">
-                            <div class="view">
-                                <img src="" alt="">
-                                <label>2</label>
-                                <button class="destroy"><i class="fa-solid fa-x"></i></button>
-                            </div>
-                        </li> -->
                     </ul>
                 </main>
             </div>
             <footer class="footer">
-                <span class="todo-count"><strong>3</strong> items left </span>
+                <span class="todo-count"><span>3</span> items left </span>
                 <div class="filters">
-                    <button class="btn-option selected" value="all">All</button>
-                    <button class="btn-option" value="completed">Completed</button>
-                    <button class="btn-option" value="incomplete">Active</button>
+                    <button class="btn-option selected" onclick="filterTodo(this)" value="all">All</button>
+                    <button class="btn-option" onclick="filterTodo(this)" value="completed">Completed</button>
+                    <button class="btn-option" onclick="filterTodo(this)" value="incomplete">Active</button>
                 </div>
                 <button type="button" class="clear-completed"> Clear Completed </button>
             </footer>

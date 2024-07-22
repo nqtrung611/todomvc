@@ -132,7 +132,7 @@ button {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.todo-list li .destroy {
+.todo-list li .delete {
     display: none;
     position: absolute;
     top: 0;

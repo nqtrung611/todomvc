@@ -314,30 +314,6 @@
 
 
 
-
-// const task_0 = {text: 'ngo', completed: false};
-
-// const task_1 = {text: 'quang', completed: true};
-
-// const allObject = [task_0, task_1];
-// // const allObject = myObject + yourObject;
-
-// console.log(allObject);
-  
-// const myObjectJSON = JSON.stringify(allObject);
-// // // console.log(myObjectJSON);
-  
-// localStorage.setItem('Todo_Data', myObjectJSON);
-
-// const getDataLo = JSON.parse(localStorage.getItem('Todo_Data'));
-// console.log(getDataLo);
-// // const quangtrung = JSON.parse(JSON.stringify(task_0));
-
-// // console.log(quangtrung);
-
-
-
-
 const newTaskInput = document.querySelector("header input");
 const listTasks = document.querySelector(".todo-list");
 
@@ -347,7 +323,7 @@ document.querySelector("#input-box").addEventListener('keydown', (event) => {
         if (newTaskInput.value.trim() === '') {
             alert("Vui lòng nhập công việc");
         } else {
-            updateStorage(newTaskInput.value.trim(), false);
+            updateNewStorage(newTaskInput.value.trim(), false);
             createTask({text: `${newTaskInput.value.trim()}`, completed: false});
             newTaskInput.value = "";
         }
@@ -356,7 +332,7 @@ document.querySelector("#input-box").addEventListener('keydown', (event) => {
 });
 
 //Thêm task vào local storage
-const updateStorage = (taskValue, completed) => {
+const updateNewStorage = (taskValue, completed) => {
     const Todo_user = localStorage.getItem('Todo_user');
     const newTodo = {text: `${taskValue}`, completed: completed};
     const todoData = JSON.parse(Todo_user);
@@ -367,6 +343,9 @@ const updateStorage = (taskValue, completed) => {
 window.onload = (e) => {
     // localStorage.setItem('Todo_user','[]');
     const Todo_user = localStorage.getItem('Todo_user');
+    if (!Todo_user) {
+        localStorage.setItem('Todo_user','[]');
+    }
     const todoData = JSON.parse(Todo_user);
     console.log(todoData);
     for (let i = 0; i < todoData.length; i++) {
@@ -383,9 +362,9 @@ const createTask = (taskValue) => {
     // innerTask.setAttribute("onmouseover", "showDeleteBtn(this)");
     // innerTask.setAttribute("onmouseleave", "hiddenDeleteBtn(this)");
     innerTask.innerHTML = `
-        <img alt="">
+        <img alt="" onclick="complete_delete(this)">
         <label>${taskValue.text}</label>
-        <button class="delete"><i class="fa-solid fa-x"></i></button>
+        <button class="delete" onclick="complete_delete(this)"><i class="fa-solid fa-x"></i></button>
     `;
     if (taskValue.completed) {
         innerTask.classList.add("completed");
@@ -396,6 +375,7 @@ const createTask = (taskValue) => {
 
 //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
 function filterTodo(e) {
+    console.log(e);
     const tasks = document.querySelectorAll(".task");
     const btnSelected = document.querySelector("button.selected");
     tasks.forEach(function(task) {
@@ -453,3 +433,49 @@ function showItemsLeft() {
     }
 }
 
+
+//Click Complete_Delete task
+function complete_delete(e) {
+    const tasks = document.querySelectorAll(".task");
+    let index = 0;
+    console.log(e.parentElement);
+    for (let i = 0; i < tasks.length; i++) {
+        if (e.parentElement === tasks[i]) {
+            index = i;
+            console.log(index);
+        }
+    }
+    if (e.tagName === 'IMG') {
+        if (e.parentElement.classList.contains("completed")) {
+            e.parentElement.classList.remove("completed");
+            updateCompleteStorage(index, true);
+        } else {
+            e.parentElement.classList.add("completed");
+            updateCompleteStorage(index, true);
+        }
+    } else {
+        tasks[index].parentNode.removeChild(tasks[index]);
+        updateCompleteStorage(index, false);
+    }
+}
+
+
+//Delete, Complete task ở Local Storage
+const updateCompleteStorage = (index, status) => {
+    const Todo_user = localStorage.getItem('Todo_user');
+    const todoData = JSON.parse(Todo_user);
+    // console.log(todoData);
+    if (status) {
+        //Complete task
+        if (todoData[index].completed) {
+            todoData[index].completed = false;
+        } else {
+            todoData[index].completed = true;
+        }
+    } else {
+        //Xóa task
+        todoData.splice(index, 1);
+    }
+    localStorage.setItem('Todo_user', JSON.stringify(todoData));
+    showItemsLeft();
+};

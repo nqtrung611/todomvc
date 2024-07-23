@@ -242,6 +242,7 @@ li input {
     height: 60px;
     margin-left: 50px;
     padding-left: 10px;
+    padding-right: 10px;
     border: none;
 }
 li .todo-button {

@@ -16,7 +16,7 @@
             <div>
                 <main>
                     <div class="toggle-all-container">
-                        <input type="checkbox" class="toggle-all">
+                        <input type="checkbox" class="toggle-all" onclick="selectAll()">
                         <label htmlfor="toggle-all" class="toggle-all-label">
                             Toggle All Input
                         </label>
@@ -32,7 +32,7 @@
                     <button class="btn-option" onclick="filterTodo(this)" value="completed">Completed</button>
                     <button class="btn-option" onclick="filterTodo(this)" value="incomplete">Active</button>
                 </div>
-                <button type="button" class="clear-completed"> Clear Completed </button>
+                <button type="button" class="clear-completed" onclick="clearCompleted()"> Clear Completed </button>
             </footer>
         </div>
         <script src="script.js"></script>

@@ -70,7 +70,7 @@ header button {
     top: 0;
 }
 .toggle-all+label {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 45px;
@@ -253,4 +253,4 @@ li .todo-button {
     .filters {
         bottom: 8px;
     }
-  }
+}

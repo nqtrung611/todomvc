@@ -116,6 +116,7 @@ header button {
     transition: color .4s;
     font-weight: 400;
     color: #484848;
+    width: 100%;
 }
 button {
     margin: 0;

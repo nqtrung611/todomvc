@@ -17,8 +17,9 @@ document.querySelector("#input-box").addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         if (newTaskInput.value.trim() === '') {
             alert("Vui lòng nhập công việc");
+            newTaskInput.value = "";
         } else {
-            updateNewStorage(newTaskInput.value.trim(), false);
+            updateStorage(newTaskInput.value.trim(), '');
             createTask({text: `${newTaskInput.value.trim()}`, completed: false});
             newTaskInput.value = "";
         }
@@ -26,16 +27,7 @@ document.querySelector("#input-box").addEventListener('keydown', (event) => {
     }
 });
 
-//Thêm task vào local storage
-const updateNewStorage = (taskValue, completed) => {
-    const Todo_user = localStorage.getItem('Todo_user');
-    const newTodo = {text: `${taskValue}`, completed: completed};
-    const todoData = JSON.parse(Todo_user);
-    todoData.push(newTodo);
-    localStorage.setItem('Todo_user', JSON.stringify(todoData));
-};
-
-//Delete, Complete, Edit task ở Local Storage
+//Delete, Complete, Edit, New task ở Local Storage
 const updateStorage = (index, text) => {
     const Todo_user = localStorage.getItem('Todo_user');
     const todoData = JSON.parse(Todo_user);
@@ -52,8 +44,14 @@ const updateStorage = (index, text) => {
             todoData.splice(index, 1);
         }
     } else {
-        //Edit task
-        todoData[index].text = text;
+        if (text === '') {
+            //New Task
+            const newTodo = {text: `${index}`, completed: false};
+            todoData.push(newTodo);
+        } else {
+            //Edit task
+            todoData[index].text = text;
+        }
     }
     localStorage.setItem('Todo_user', JSON.stringify(todoData));
     showItemsLeft();

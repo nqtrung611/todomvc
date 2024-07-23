@@ -1,3 +1,16 @@
+window.onload = (e) => {
+    // localStorage.setItem('Todo_user','[]');
+    const Todo_user = localStorage.getItem('Todo_user');
+    if (!Todo_user) {
+        localStorage.setItem('Todo_user','[]');
+    }
+    const todoData = JSON.parse(Todo_user);
+    for (let i = 0; i < todoData.length; i++) {
+        createTask(todoData[i]);
+    }
+    showItemsLeft();
+};
+
 //Thêm mới, cập nhật task vào local storage
 document.querySelector("#input-box").addEventListener('keydown', (event) => {
     const newTaskInput = document.querySelector("header input");
@@ -22,16 +35,27 @@ const updateNewStorage = (taskValue, completed) => {
     localStorage.setItem('Todo_user', JSON.stringify(todoData));
 };
 
-window.onload = (e) => {
-    // localStorage.setItem('Todo_user','[]');
+//Delete, Complete, Edit task ở Local Storage
+const updateStorage = (index, text) => {
     const Todo_user = localStorage.getItem('Todo_user');
-    if (!Todo_user) {
-        localStorage.setItem('Todo_user','[]');
-    }
     const todoData = JSON.parse(Todo_user);
-    for (let i = 0; i < todoData.length; i++) {
-        createTask(todoData[i]);
+    if (typeof text === 'boolean') {
+        if (text) {
+            //Complete task
+            if (todoData[index].completed) {
+                todoData[index].completed = false;
+            } else {
+                todoData[index].completed = true;
+            }
+        } else {
+            //Xóa task
+            todoData.splice(index, 1);
+        }
+    } else {
+        //Edit task
+        todoData[index].text = text;
     }
+    localStorage.setItem('Todo_user', JSON.stringify(todoData));
     showItemsLeft();
 };
 
@@ -170,30 +194,6 @@ function complete_delete(e) {
     const btnSelected = document.querySelector("button.selected");
     filterTodo(btnSelected);
 }
-
-//Delete, Complete, Edit task ở Local Storage
-const updateStorage = (index, text) => {
-    const Todo_user = localStorage.getItem('Todo_user');
-    const todoData = JSON.parse(Todo_user);
-    if (typeof text === 'boolean') {
-        if (text) {
-            //Complete task
-            if (todoData[index].completed) {
-                todoData[index].completed = false;
-            } else {
-                todoData[index].completed = true;
-            }
-        } else {
-            //Xóa task
-            todoData.splice(index, 1);
-        }
-    } else {
-        //Edit task
-        todoData[index].text = text;
-    }
-    localStorage.setItem('Todo_user', JSON.stringify(todoData));
-    showItemsLeft();
-};
 
 //Clear Completed
 function clearCompleted() {

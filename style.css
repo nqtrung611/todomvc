@@ -146,7 +146,7 @@ button {
     color: #949494;
     transition: color .2s ease-out;
 }
-.todo-list li:hover .delete {
+.todo-list .view:hover .delete {
     display: inline-block;
 }
 .footer {
@@ -238,7 +238,7 @@ li input {
     transition: color .4s;
     font-weight: 400;
     color: #484848;
-    width: 500px;
+    width: calc(100% - 50px);
     height: 60px;
     margin-left: 50px;
     padding-left: 10px;

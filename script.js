@@ -41,6 +41,7 @@ window.onload = (e) => {
 const createTask = (taskValue) => {
     let innerTask = document.createElement("li");
     innerTask.classList.add("task");
+    innerTask.classList.add("view");
     innerTask.innerHTML = `
         <img alt="" onclick="complete_delete(this)">
         <label ondblclick="editTask(this)">${taskValue.text}</label>
@@ -233,6 +234,7 @@ function editTask(element) {
         }
     }
     const textEdit = element.textContent;
+    element.parentElement.classList.remove("view");
     element.parentElement.querySelector("img").style.display = "none";
     const inputElement = element.parentElement.querySelector("input");
     inputElement.style.display = "inline-block";
@@ -244,6 +246,7 @@ function editTask(element) {
             element.parentElement.querySelector("img").style.display = "block";
             element.style.display = "block";
             inputElement.style.display = "none";
+            element.parentElement.classList.add("view");
         }
     });
     inputElement.addEventListener('keydown', function(event) {
@@ -256,6 +259,7 @@ function editTask(element) {
                 element.innerText = inputElement.value.trim();
                 inputElement.style.display = "none";
                 editStorage(index, inputElement.value.trim());
+                element.parentElement.classList.add("view");
             }
         }
     });
@@ -263,6 +267,7 @@ function editTask(element) {
         element.parentElement.querySelector("img").style.display = "block";
         element.style.display = "block";
         inputElement.style.display = "none";
+        element.parentElement.classList.add("view");
     });
 }
 

@@ -1,8 +1,6 @@
-const newTaskInput = document.querySelector("header input");
-const listTasks = document.querySelector(".todo-list");
-
 //Thêm mới, cập nhật task vào local storage
 document.querySelector("#input-box").addEventListener('keydown', (event) => {
+    const newTaskInput = document.querySelector("header input");
     if (event.key === 'Enter') {
         if (newTaskInput.value.trim() === '') {
             alert("Vui lòng nhập công việc");
@@ -39,6 +37,7 @@ window.onload = (e) => {
 
 //Render từng task
 const createTask = (taskValue) => {
+    const listTasks = document.querySelector(".todo-list");
     let innerTask = document.createElement("li");
     innerTask.classList.add("task");
     innerTask.classList.add("view");

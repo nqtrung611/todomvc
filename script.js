@@ -256,3 +256,105 @@ function editTask(element) {
         element.parentElement.classList.add("view");
     });
 }
+
+
+
+
+// window.onload = (e) => {
+//     const Todo_user = localStorage.getItem('Todo_user');
+//     if (!Todo_user) {
+//         localStorage.setItem('Todo_user','[]');
+//     }
+//     const todoData = JSON.parse(Todo_user);
+//     for (let i = 0; i < todoData.length; i++) {
+//         renderTask(todoData[i]);
+//     }
+//     // showItemsLeft();
+// };
+
+// //Render 1 task
+// const renderTask = (taskValue) => {
+//     const listTasks = document.querySelector(".todo-list");
+//     let innerTask = document.createElement("li");
+//     innerTask.classList.add("task");
+//     innerTask.classList.add("view");
+//     innerTask.innerHTML = `
+//         <img alt="" onclick="onComplete(this)">
+//         <label ondblclick="editTask(this)">${taskValue.text}</label>
+//         <button class="delete" onclick="onDelete(this)"><i class="fa-solid fa-x"></i></button>
+//         <input type="text" style="display: none">        
+//     `;
+//     if (taskValue.completed) {
+//         innerTask.classList.add("completed");
+//     }
+//     listTasks.appendChild(innerTask);
+//     // showItemsLeft();
+// };
+
+// //Thêm mới, cập nhật task vào local storage
+// const newTaskInput = document.querySelector("header input");
+// newTaskInput.addEventListener('keydown', (event) => {
+//     if (event.key === 'Enter') {
+//         if (newTaskInput.value.trim() === '') {
+//             alert("Vui lòng nhập công việc");
+//             newTaskInput.value = "";
+//         } else {
+//             updateStorage(newTaskInput.value.trim(), '');
+//             renderTask({text: `${newTaskInput.value.trim()}`, completed: false});
+//             newTaskInput.value = "";
+//         }
+//         // showItemsLeft();
+//     }
+// });
+
+// //Delete, Complete, Edit, New task ở Local Storage
+// const updateStorage = (value, text) => {
+//     const Todo_user = localStorage.getItem('Todo_user');
+//     const todoData = JSON.parse(Todo_user);
+//     switch(text) {
+//         case false: //Xóa Task
+//             todoData.splice(value, 1);
+//             break;
+//         case true: //Complete Task
+//             todoData[value].completed = (todoData[value].completed) ? 'false' : 'true';
+//             break;
+//         case '': //New Task
+//             const newTodo = {text: `${value}`, completed: false};
+//             todoData.push(newTodo);
+//             break;
+//         default: //Edit Task
+//             todoData[value].text = text;
+//             break;
+//     }
+    
+//     localStorage.setItem('Todo_user', JSON.stringify(todoData));
+//     // showItemsLeft();
+// };
+
+// //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
+// function filterTodo(e) {
+//     const tasks = document.querySelectorAll(".task");
+//     const btnSelected = document.querySelector("button.selected");
+//     tasks.forEach(function(task) {
+//         switch(e.value) {
+//             case "all":
+//                 btnSelected.classList.remove("selected");
+//                 e.classList.add("selected");
+//                 task.style.display = "flex";
+//                 break;
+//             case "completed":
+//                 btnSelected.classList.remove("selected");
+//                 e.classList.add("selected");
+//                 task.style.display = (task.classList.contains("completed")) ? 'flex' : 'none';
+//                 // (task.classList.contains("completed")) ? `${task.style.display = "flex"}` : `${task.style.display = "none"}`;
+//                 break;
+//             case "incomplete":
+//                 btnSelected.classList.remove("selected");
+//                 e.classList.add("selected");
+//                 task.style.display = (!task.classList.contains("completed")) ? 'flex' : 'none';
+//                 // (!task.classList.contains("completed")) ? `${task.style.display = "flex"}` : `${task.style.display = "none"}`;
+//                 break;
+//         }
+//     });
+//     // showItemsLeft();
+// }

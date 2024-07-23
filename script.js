@@ -159,33 +159,40 @@ function complete_delete(e) {
     if (e.tagName === 'IMG') {
         if (e.parentElement.classList.contains("completed")) {
             e.parentElement.classList.remove("completed");
-            updateCompleteStorage(index, true);
+            updateStorage(index, true);
         } else {
             e.parentElement.classList.add("completed");
-            updateCompleteStorage(index, true);
+            updateStorage(index, true);
         }
     } else {
         tasks[index].parentNode.removeChild(tasks[index]);
-        updateCompleteStorage(index, false);
+        updateStorage(index, false);
     }
     const btnSelected = document.querySelector("button.selected");
     filterTodo(btnSelected);
 }
 
-//Delete, Complete task ở Local Storage
-const updateCompleteStorage = (index, status) => {
+//Delete, Complete, Edit task ở Local Storage
+const updateStorage = (index, text) => {
+    console.log(typeof text);
     const Todo_user = localStorage.getItem('Todo_user');
     const todoData = JSON.parse(Todo_user);
-    if (status) {
-        //Complete task
-        if (todoData[index].completed) {
-            todoData[index].completed = false;
+    if (typeof text === 'boolean') {
+        console.log("trung");
+        if (text) {
+            //Complete task
+            if (todoData[index].completed) {
+                todoData[index].completed = false;
+            } else {
+                todoData[index].completed = true;
+            }
         } else {
-            todoData[index].completed = true;
+            //Xóa task
+            todoData.splice(index, 1);
         }
     } else {
-        //Xóa task
-        todoData.splice(index, 1);
+        //Edit task
+        todoData[index].text = text;
     }
     localStorage.setItem('Todo_user', JSON.stringify(todoData));
     showItemsLeft();
@@ -199,7 +206,7 @@ function clearCompleted() {
         for ( let j = tasks.length - 1; j >= 0; j--) {
             if (itemsCompleted[i] === tasks[j]) {
                 tasks[j].parentNode.removeChild(tasks[j]);
-                updateCompleteStorage(j, false);
+                updateStorage(j, false);
             }
         }
     }
@@ -212,13 +219,13 @@ function selectAll() {
     if (tasks.length === itemsCompleted.length) {
         for (let i = 0; i < tasks.length; i++) {
             tasks[i].classList.remove("completed");
-            updateCompleteStorage(i, true);
+            updateStorage(i, true);
         }
     } else {
         for (let i = 0; i < tasks.length; i++) {
             if (!tasks[i].classList.contains("completed")) {
                 tasks[i].classList.add("completed");
-                updateCompleteStorage(i, true);
+                updateStorage(i, true);
             }
         }
     }
@@ -258,7 +265,7 @@ function editTask(element) {
                 element.style.display = "block";
                 element.innerText = inputElement.value.trim();
                 inputElement.style.display = "none";
-                editStorage(index, inputElement.value.trim());
+                updateStorage(index, inputElement.value.trim());
                 element.parentElement.classList.add("view");
             }
         }
@@ -269,13 +276,4 @@ function editTask(element) {
         inputElement.style.display = "none";
         element.parentElement.classList.add("view");
     });
-}
-
-//Edit Storage
-const editStorage = (index, text) => {
-    const Todo_user = localStorage.getItem('Todo_user');
-    const todoData = JSON.parse(Todo_user);
-    todoData[index].text = text;
-    localStorage.setItem('Todo_user', JSON.stringify(todoData));
-    showItemsLeft();
 }

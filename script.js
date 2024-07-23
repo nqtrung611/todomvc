@@ -90,20 +90,12 @@ function filterTodo(e) {
             case "completed":
                 btnSelected.classList.remove("selected");
                 e.classList.add("selected");
-                if(task.classList.contains("completed")) {
-                    task.style.display = "flex";
-                } else {
-                    task.style.display = "none";
-                }
+                (task.classList.contains("completed")) ? `${task.style.display = "flex"}` : `${task.style.display = "none"}`;
                 break;
             case "incomplete":
                 btnSelected.classList.remove("selected");
                 e.classList.add("selected");
-                if(!task.classList.contains("completed")) {
-                    task.style.display = "flex";
-                } else {
-                    task.style.display = "none";
-                }
+                (!task.classList.contains("completed")) ? `${task.style.display = "flex"}` : `${task.style.display = "none"}`;
                 break;
         }
     });
@@ -122,18 +114,10 @@ function showItemsLeft() {
     }
 
     const clearBtn = document.querySelector(".clear-completed");
-    if (itemsCompleted.length) {
-        clearBtn.style.display = "inline-block";
-    } else {
-        clearBtn.style.display = "none";
-    }
+    (itemsCompleted.length) ? `${clearBtn.style.display = "inline-block"}` : `${clearBtn.style.display = "none"}`;
 
     const footer = document.querySelector(".footer");
-    if (!tasks.length) {
-        footer.style.display = "none";
-    } else {
-        footer.style.display = "block";
-    }
+    (!tasks.length) ? `${footer.style.display = "none"}` : `${footer.style.display = "block"}`;
 
     const btnSelectAll = document.querySelector(".toggle-all");
     const btnSelected = document.querySelector("button.selected");

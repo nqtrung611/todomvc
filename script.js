@@ -173,11 +173,9 @@ function complete_delete(e) {
 
 //Delete, Complete, Edit task ở Local Storage
 const updateStorage = (index, text) => {
-    console.log(typeof text);
     const Todo_user = localStorage.getItem('Todo_user');
     const todoData = JSON.parse(Todo_user);
     if (typeof text === 'boolean') {
-        console.log("trung");
         if (text) {
             //Complete task
             if (todoData[index].completed) {

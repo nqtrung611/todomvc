@@ -269,7 +269,10 @@ function editTask(element) {
 //     for (let i = 0; i < todoData.length; i++) {
 //         renderTask(todoData[i]);
 //     }
-//     // showItemsLeft();
+//     showItemsLeft();
+//     showSelectAll();
+//     showFooter();
+//     showClearCompleted();
 // };
 
 // //Render 1 task
@@ -316,7 +319,7 @@ function editTask(element) {
 //             todoData.splice(value, 1);
 //             break;
 //         case true: //Complete Task
-//             todoData[value].completed = (todoData[value].completed) ? 'false' : 'true';
+//             todoData[value].completed = (todoData[value].completed) ? false : true;
 //             break;
 //         case '': //New Task
 //             const newTodo = {text: `${value}`, completed: false};
@@ -330,6 +333,53 @@ function editTask(element) {
 //     localStorage.setItem('Todo_user', JSON.stringify(todoData));
 //     // showItemsLeft();
 // };
+
+// //Show item left
+// function showItemsLeft() {
+//     const itemsLeft = document.querySelector(".todo-count");
+//     const tasks = document.querySelectorAll(".task");
+//     const tasksCompleted = document.querySelectorAll(".task.completed");
+//     const countTask = tasks.length - tasksCompleted.length;
+//     itemsLeft.innerText = (countTask < 2) ? `${countTask} item left` : `${countTask} items left`;
+// }
+
+// //Show Clear Completed
+// function showClearCompleted() {
+//     const clearBtn = document.querySelector(".clear-completed");
+//     const tasksCompleted = document.querySelectorAll(".task.completed");
+//     clearBtn.style.display = (tasksCompleted.length) ? 'inline-block' : 'none';
+// }
+
+// //Show footer
+// function showFooter() {
+//     const footer = document.querySelector(".footer");
+//     const tasks = document.querySelectorAll(".task");
+//     footer.style.display = (!tasks.length) ? 'none' : 'block';
+// }
+
+// //Show Select All và in đậm
+// function showSelectAll() {
+//     const tasks = document.querySelectorAll(".task");
+//     const btnSelected = document.querySelector("button.selected");
+//     const label = document.querySelector('label[htmlfor="toggle-all"]');
+//     const itemsLeft = document.querySelector(".todo-count");
+//     if (tasks.length === 0) {
+//         label.style.display = "none";
+//     } else {
+//         switch(btnSelected.value) {
+//             case "all":
+//                 label.style.display = "flex";
+//                 break;
+//             case "completed":
+//                 label.style.display = (itemsCompleted.length === 0) ? 'none' : 'flex';
+//                 break;
+//             case "incomplete":
+//                 label.style.display = (itemsLeft.innerText === '0 item left') ? 'none' : 'flex';
+//                 break;
+//         }
+//     }
+//     (itemsLeft.innerText === '0 item left') ? label.classList.add("active") : label.classList.remove("active");
+// }
 
 // //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
 // function filterTodo(e) {
@@ -356,5 +406,56 @@ function editTask(element) {
 //                 break;
 //         }
 //     });
-//     // showItemsLeft();
+// }
+
+// //Select All
+// function selectAll() {
+//     const tasks = document.querySelectorAll(".task");
+//     const itemsCompleted = document.querySelectorAll(".task.completed");
+//     if (tasks.length === itemsCompleted.length) {
+//         for (let i = 0; i < tasks.length; i++) {
+//             tasks[i].classList.remove("completed");
+//             updateStorage(i, true);
+//         }
+//     } else {
+//         for (let i = 0; i < tasks.length; i++) {
+//             if (!tasks[i].classList.contains("completed")) {
+//                 tasks[i].classList.add("completed");
+//                 updateStorage(i, true);
+//             }
+//         }
+//     }
+//     showClearCompleted();
+//     showItemsLeft();
+//     showSelectAll();
+// }
+
+// //Click Complete task
+// function onComplete(e) {
+//     const tasks = document.querySelectorAll(".task");
+//     let index = 0;
+//     for (let i = 0; i < tasks.length; i++) {
+//         if (e.parentElement === tasks[i]) {
+//             index = i;
+//         }
+//     }
+//     updateStorage(index, true);
+//     if (e.parentElement.classList.contains("completed")) {
+//         e.parentElement.classList.remove("completed");
+//     } else {
+//         e.parentElement.classList.add("completed");
+//     }
+// }
+
+// //Click Delete task
+// function onDelete(e) {
+//     const tasks = document.querySelectorAll(".task");
+//     let index = 0;
+//     for (let i = 0; i < tasks.length; i++) {
+//         if (e.parentElement === tasks[i]) {
+//             index = i;
+//         }
+//     }
+//     tasks[index].parentNode.removeChild(tasks[index]);
+//     updateStorage(index, false);
 // }

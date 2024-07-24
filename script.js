@@ -24,11 +24,11 @@ window.onload = () => {
     const todoData = JSON.parse(Todo_user);
     const fragment = document.createDocumentFragment();
     for (const index in todoData) {
-        let showTask = renderTask(index, todoData[index]);
+        let itemTask = renderTask(index, todoData[index]);
         if (todoData[index].completed) {
-            showTask.classList.add("completed");
+            itemTask.classList.add("completed");
         }
-        fragment.appendChild(showTask);
+        fragment.appendChild(itemTask);
     }
     listTasks.appendChild(fragment);
     showItemsLeft();
@@ -53,7 +53,7 @@ const renderTask = (index, taskValue) => {
 }
 
 //Create new task
-const createNewTask = (index, taskValue, type) => {
+const createNewTask = (index, taskValue) => {
     let innerTask = renderTask(index, taskValue);
     const btnSelected = document.querySelector("button.selected");
     if (btnSelected.value === 'completed') {
@@ -69,15 +69,15 @@ newTaskInput.addEventListener('keydown', (event) => {
         if (newTaskInput.value.trim() === '') {
             alert("Vui lòng nhập công việc");
             newTaskInput.value = "";
-        } else {
-            const taskId = generateRandomId(10);
-            updateStorage(taskId, newTaskInput.value.trim(), ENUM_TYPE.NEW);
-            createNewTask(taskId, {text: `${newTaskInput.value.trim()}`, completed: false});
-            newTaskInput.value = "";
-            showFooter();
-            showItemsLeft();
-            showSelectAll();
+            return;
         }
+        const taskId = generateRandomId(10);
+        updateStorage(taskId, newTaskInput.value.trim(), ENUM_TYPE.NEW);
+        createNewTask(taskId, {text: `${newTaskInput.value.trim()}`, completed: false});
+        newTaskInput.value = "";
+        showFooter();
+        showItemsLeft();
+        showSelectAll();
     }
 });
 
@@ -177,9 +177,8 @@ function filterTodo(e) {
 //Select All
 function selectAll() {
     const tasks = document.querySelectorAll(".task");
-    const tasksCompleted = document.querySelectorAll(".task.completed");
     const tasksInComplete = document.querySelectorAll('.task:not(.completed)');
-    if (tasks.length === tasksCompleted.length) {
+    if (tasksInComplete.length === 0) {
         tasks.forEach(function(task) {
             task.classList.remove("completed");
             updateStorage(task.id, '', ENUM_TYPE.COMPLETE);

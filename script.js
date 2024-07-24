@@ -1,39 +1,63 @@
+function generateRandomId(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let id = '';
+    for (let i = 0; i < length; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return id;
+}
+
+const ENUM_TYPE = {
+    NEW: 'new',
+    EDIT: 'edit',
+    DELETE: 'delete',
+    COMPLETE: 'complete'
+}
+const localItem = 'Todo_user';
+const listTasks = document.querySelector(".todo-list");
+
 window.onload = () => {
-    const Todo_user = localStorage.getItem('Todo_user');
+    const Todo_user = localStorage.getItem(localItem);
     if (!Todo_user) {
-        localStorage.setItem('Todo_user','[]');
+        localStorage.setItem(localItem,'{}');
     }
     const todoData = JSON.parse(Todo_user);
-    for (let i = 0; i < todoData.length; i++) {
-        renderTask(todoData[i], 'show');
+    const fragment = document.createDocumentFragment();
+    for (const index in todoData) {
+        let showTask = renderTask(index, todoData[index]);
+        if (todoData[index].completed) {
+            showTask.classList.add("completed");
+        }
+        fragment.appendChild(showTask);
     }
+    listTasks.appendChild(fragment);
     showItemsLeft();
     showSelectAll();
     showFooter();
     showClearCompleted();
 };
 
-//Render 1 task
-const renderTask = (taskValue, text) => {
-    const listTasks = document.querySelector(".todo-list");
+//Render task
+const renderTask = (index, taskValue) => {
     let innerTask = document.createElement("li");
     innerTask.classList.add("task");
     innerTask.classList.add("view");
+    innerTask.setAttribute("id",index);
     innerTask.innerHTML = `
         <img alt="" onclick="onComplete(this)">
         <label ondblclick="editTask(this)">${taskValue.text}</label>
         <button class="delete" onclick="onDelete(this)"><i class="fa-solid fa-x"></i></button>
         <input type="text" style="display: none">        
     `;
-    if (text === 'show') {
-        if (taskValue.completed) {
-            innerTask.classList.add("completed");
-        }
-    } else {
-        const btnSelected = document.querySelector("button.selected");
-        if (btnSelected.value === 'completed') {
-            innerTask.style.display = 'none';
-        }
+    return innerTask;
+}
+
+//Create new task
+const createNewTask = (index, taskValue, type) => {
+    let innerTask = renderTask(index, taskValue);
+    const btnSelected = document.querySelector("button.selected");
+    if (btnSelected.value === 'completed') {
+        innerTask.style.display = 'none';
     }
     listTasks.appendChild(innerTask);
 };
@@ -46,8 +70,9 @@ newTaskInput.addEventListener('keydown', (event) => {
             alert("Vui lòng nhập công việc");
             newTaskInput.value = "";
         } else {
-            updateStorage('', newTaskInput.value.trim(), ENUM_TYPE.NEW);
-            renderTask({text: `${newTaskInput.value.trim()}`, completed: false}, 'new');
+            const taskId = generateRandomId(10);
+            updateStorage(taskId, newTaskInput.value.trim(), ENUM_TYPE.NEW);
+            createNewTask(taskId, {text: `${newTaskInput.value.trim()}`, completed: false});
             newTaskInput.value = "";
             showFooter();
             showItemsLeft();
@@ -56,33 +81,25 @@ newTaskInput.addEventListener('keydown', (event) => {
     }
 });
 
-const ENUM_TYPE = {
-    NEW: 'new',
-    EDIT: 'edit',
-    DELETE: 'delete',
-    COMPLETE: 'complete'
-}
-
 //Delete, Complete, Edit, New task ở Local Storage
 const updateStorage = (index, text, type) => {
-    const Todo_user = localStorage.getItem('Todo_user');
+    const Todo_user = localStorage.getItem(localItem);
     const todoData = JSON.parse(Todo_user);
     switch(type) {
         case ENUM_TYPE.DELETE: //Xóa Task
-            todoData.splice(index, 1);
+            delete todoData[index];
             break;
         case ENUM_TYPE.COMPLETE: //Complete Task
             todoData[index].completed = (todoData[index].completed) ? false : true;
             break;
         case ENUM_TYPE.NEW: //New Task
-            const newTodo = {text: `${text}`, completed: false};
-            todoData.push(newTodo);
+            todoData[index] = {text: text, completed: false};
             break;
         case ENUM_TYPE.EDIT: //Edit Task
             todoData[index].text = text;
             break;
     }
-    localStorage.setItem('Todo_user', JSON.stringify(todoData));
+    localStorage.setItem(localItem, JSON.stringify(todoData));
 };
 
 //Show item left
@@ -162,19 +179,18 @@ function filterTodo(e) {
 //Select All
 function selectAll() {
     const tasks = document.querySelectorAll(".task");
-    const itemsCompleted = document.querySelectorAll(".task.completed");
-    if (tasks.length === itemsCompleted.length) {
-        for (let i = 0; i < tasks.length; i++) {
-            tasks[i].classList.remove("completed");
-            updateStorage(i, '', ENUM_TYPE.COMPLETE);
-        }
+    const tasksCompleted = document.querySelectorAll(".task.completed");
+    const tasksInComplete = document.querySelectorAll('.task:not(.completed)');
+    if (tasks.length === tasksCompleted.length) {
+        tasks.forEach(function(task) {
+            task.classList.remove("completed");
+            updateStorage(task.id, '', ENUM_TYPE.COMPLETE);
+        });
     } else {
-        for (let i = 0; i < tasks.length; i++) {
-            if (!tasks[i].classList.contains("completed")) {
-                tasks[i].classList.add("completed");
-                updateStorage(i, '', ENUM_TYPE.COMPLETE);
-            }
-        }
+        tasksInComplete.forEach(function(taskInComplete) {
+            taskInComplete.classList.add("completed");
+            updateStorage(taskInComplete.id, '', ENUM_TYPE.COMPLETE);
+        });
     }
     const btnSelected = document.querySelector("button.selected");
     filterTodo(btnSelected);
@@ -186,24 +202,11 @@ function selectAll() {
 
 //Click Complete task
 function onComplete(e) {
-    const tasks = document.querySelectorAll(".task");
-    let index = 0;
-    for (let i = 0; i < tasks.length; i++) {
-        if (e.parentElement === tasks[i]) {
-            index = i;
-            break;
-        }
-    }
-    updateStorage(index, '', ENUM_TYPE.COMPLETE);
+    const taskId = e.parentElement.id;
+    updateStorage(taskId, '', ENUM_TYPE.COMPLETE);
     const btnSelected = document.querySelector("button.selected");
-    if (e.parentElement.classList.contains("completed")) {
-        e.parentElement.classList.remove("completed");
-    } else {
-        e.parentElement.classList.add("completed");
-    }
+    e.parentElement.classList.toggle("completed");
     switch(btnSelected.value) {
-        case "all":
-            break;
         case "completed":
             e.parentElement.style.display = (e.parentElement.classList.contains("completed")) ? 'flex' : 'none';
             break;
@@ -218,16 +221,10 @@ function onComplete(e) {
 
 //Click Delete task
 function onDelete(e) {
-    const tasks = document.querySelectorAll(".task");
-    let index = 0;
-    for (let i = 0; i < tasks.length; i++) {
-        if (e.parentElement === tasks[i]) {
-            index = i;
-            break;
-        }
-    }
-    tasks[index].parentNode.removeChild(tasks[index]);
-    updateStorage(index, '', ENUM_TYPE.DELETE);
+    const taskId = e.parentElement.id;
+    const taskDelete = document.querySelector(`#${taskId}`);
+    taskDelete.parentNode.removeChild(taskDelete);
+    updateStorage(taskId, '', ENUM_TYPE.DELETE);
     showItemsLeft();
     showSelectAll();
     showFooter();
@@ -237,15 +234,11 @@ function onDelete(e) {
 //Click Clear Completed
 function clearCompleted(e) {
     const tasks = document.querySelectorAll(".task");
-    const itemsCompleted = document.querySelectorAll(".task.completed");
-    for (let i = itemsCompleted.length - 1; i >= 0; i--) {
-        for ( let j = tasks.length - 1; j >= 0; j--) {
-            if (itemsCompleted[i] === tasks[j]) {
-                tasks[j].parentNode.removeChild(tasks[j]);
-                updateStorage(j, '', ENUM_TYPE.DELETE);
-            }
-        }
-    }
+    const tasksCompleted = document.querySelectorAll(".task.completed");
+    tasksCompleted.forEach(function(taskCompleted) {
+        updateStorage(taskCompleted.id, '', ENUM_TYPE.DELETE);
+        taskCompleted.parentNode.removeChild(taskCompleted);
+    });
     e.style.display = 'none';
     showItemsLeft();
     showSelectAll();
@@ -254,14 +247,6 @@ function clearCompleted(e) {
 
 //Edit task
 function editTask(element) {
-    let index;
-    const tasks = document.querySelectorAll(".task");
-    for (let i = 0; i < tasks.length; i++) {
-        if (element.parentElement === tasks[i]) {
-            index = i;
-            break;
-        }
-    }
     element.parentElement.classList.remove("view");
     element.parentElement.querySelector("img").style.display = "none";
     const inputElement = element.parentElement.querySelector("input");
@@ -273,15 +258,13 @@ function editTask(element) {
         if (event.key === 'Escape') {
             showTaskAgain(element, inputElement);
         }
-    });
-    inputElement.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             if (inputElement.value.trim() === '') {
                 alert("Vui lòng nhập công việc");
             } else {
                 showTaskAgain(element, inputElement);
                 element.innerText = inputElement.value.trim();
-                updateStorage(index, inputElement.value.trim(), ENUM_TYPE.EDIT);
+                updateStorage(element.parentElement.id, inputElement.value.trim(), ENUM_TYPE.EDIT);
             }
         }
     });

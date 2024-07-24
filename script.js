@@ -105,10 +105,8 @@ const updateStorage = (index, text, type) => {
 //Show item left
 function showItemsLeft() {
     const itemsLeft = document.querySelector(".todo-count");
-    const tasks = document.querySelectorAll(".task");
-    const tasksCompleted = document.querySelectorAll(".task.completed");
-    const countTask = tasks.length - tasksCompleted.length;
-    itemsLeft.innerText = (countTask < 2) ? `${countTask} item left` : `${countTask} items left`;
+    const tasksInComplete = document.querySelectorAll('.task:not(.completed)');
+    itemsLeft.innerText = (tasksInComplete.length < 2) ? `${tasksInComplete.length} item left` : `${tasksInComplete.length} items left`;
 }
 
 //Show Clear Completed
@@ -129,9 +127,9 @@ function showFooter() {
 function showSelectAll() {
     const tasks = document.querySelectorAll(".task");
     const tasksCompleted = document.querySelectorAll(".task.completed");
+    const tasksInComplete = document.querySelectorAll('.task:not(.completed)');
     const btnSelected = document.querySelector("button.selected");
     const label = document.querySelector('label[htmlfor="toggle-all"]');
-    const itemsLeft = document.querySelector(".todo-count");
     if (tasks.length === 0) {
         label.style.display = "none";
     } else {
@@ -143,11 +141,11 @@ function showSelectAll() {
                 label.style.display = (tasksCompleted.length === 0) ? 'none' : 'flex';
                 break;
             case "incomplete":
-                label.style.display = (itemsLeft.innerText === '0 item left') ? 'none' : 'flex';
+                label.style.display = (tasksInComplete.length === 0) ? 'none' : 'flex';
                 break;
         }
     }
-    (itemsLeft.innerText === '0 item left') ? label.classList.add("active") : label.classList.remove("active");
+    (tasksInComplete.length === 0) ? label.classList.add("active") : label.classList.remove("active");
 }
 
 //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
@@ -233,7 +231,6 @@ function onDelete(e) {
 
 //Click Clear Completed
 function clearCompleted(e) {
-    const tasks = document.querySelectorAll(".task");
     const tasksCompleted = document.querySelectorAll(".task.completed");
     tasksCompleted.forEach(function(taskCompleted) {
         updateStorage(taskCompleted.id, '', ENUM_TYPE.DELETE);

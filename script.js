@@ -236,7 +236,6 @@ function clearCompleted(e) {
         taskCompleted.parentNode.removeChild(taskCompleted);
     });
     e.style.display = 'none';
-    showItemsLeft();
     showSelectAll();
     showFooter();
 }

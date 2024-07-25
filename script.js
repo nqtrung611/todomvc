@@ -13,6 +13,12 @@ const ENUM_TYPE = {
     DELETE: 'delete',
     COMPLETE: 'complete'
 }
+const ENUM_TAB = {
+    ALL: 'all',
+    COMPLETED: 'completed',
+    INCOMPLETE: 'incomplete'
+}
+
 const localItem = 'Todo_user';
 const listTasks = document.querySelector(".todo-list");
 
@@ -73,7 +79,7 @@ newTaskInput.addEventListener('keydown', (event) => {
         }
         const taskId = generateRandomId(10);
         updateStorage(taskId, newTaskInput.value.trim(), ENUM_TYPE.NEW);
-        createNewTask(taskId, {text: `${newTaskInput.value.trim()}`, completed: false});
+        createNewTask(taskId, {text: newTaskInput.value.trim(), completed: false});
         newTaskInput.value = "";
         showFooter();
         showItemsLeft();
@@ -90,7 +96,7 @@ const updateStorage = (index, text, type) => {
             delete todoData[index];
             break;
         case ENUM_TYPE.COMPLETE: //Complete Task
-            todoData[index].completed = (todoData[index].completed) ? false : true;
+            todoData[index].completed = !Boolean(todoData[index].completed);
             break;
         case ENUM_TYPE.NEW: //New Task
             todoData[index] = {text: text, completed: false};
@@ -130,43 +136,39 @@ function showSelectAll() {
     const tasksInComplete = document.querySelectorAll('.task:not(.completed)');
     const btnSelected = document.querySelector("button.selected");
     const label = document.querySelector('label[htmlfor="toggle-all"]');
+    (tasksInComplete.length === 0) ? label.classList.add("active") : label.classList.remove("active");
     if (tasks.length === 0) {
         label.style.display = "none";
-    } else {
-        switch(btnSelected.value) {
-            case "all":
-                label.style.display = "flex";
-                break;
-            case "completed":
-                label.style.display = (tasksCompleted.length === 0) ? 'none' : 'flex';
-                break;
-            case "incomplete":
-                label.style.display = (tasksInComplete.length === 0) ? 'none' : 'flex';
-                break;
-        }
+        return;
     }
-    (tasksInComplete.length === 0) ? label.classList.add("active") : label.classList.remove("active");
+    switch(btnSelected.value) {
+        case ENUM_TAB.ALL:
+            label.style.display = "flex";
+            break;
+        case ENUM_TAB.COMPLETED:
+            label.style.display = (tasksCompleted.length === 0) ? 'none' : 'flex';
+            break;
+        case ENUM_TAB.INCOMPLETE:
+            label.style.display = (tasksInComplete.length === 0) ? 'none' : 'flex';
+            break;
+    }
 }
 
 //Button select task (Tất cả, hoàn thành, chưa hoàn thành)
 function filterTodo(e) {
     const tasks = document.querySelectorAll(".task");
     const btnSelected = document.querySelector("button.selected");
+    btnSelected.classList.remove("selected");
+    e.classList.add("selected");
     tasks.forEach(function(task) {
         switch(e.value) {
-            case "all":
-                btnSelected.classList.remove("selected");
-                e.classList.add("selected");
+            case ENUM_TAB.ALL:
                 task.style.display = "flex";
                 break;
-            case "completed":
-                btnSelected.classList.remove("selected");
-                e.classList.add("selected");
+            case ENUM_TAB.COMPLETED:
                 task.style.display = (task.classList.contains("completed")) ? 'flex' : 'none';
                 break;
-            case "incomplete":
-                btnSelected.classList.remove("selected");
-                e.classList.add("selected");
+            case ENUM_TAB.INCOMPLETE:
                 task.style.display = (!task.classList.contains("completed")) ? 'flex' : 'none';
                 break;
         }
@@ -203,13 +205,11 @@ function onComplete(e) {
     updateStorage(taskId, '', ENUM_TYPE.COMPLETE);
     const btnSelected = document.querySelector("button.selected");
     e.parentElement.classList.toggle("completed");
-    switch(btnSelected.value) {
-        case "completed":
-            e.parentElement.style.display = (e.parentElement.classList.contains("completed")) ? 'flex' : 'none';
-            break;
-        case "incomplete":
-            e.parentElement.style.display = (!e.parentElement.classList.contains("completed")) ? 'flex' : 'none';
-            break;
+    if (btnSelected.value === ENUM_TAB.COMPLETED) {
+        e.parentElement.style.display = (e.parentElement.classList.contains("completed")) ? 'flex' : 'none';
+    }
+    if (btnSelected.value === ENUM_TAB.INCOMPLETE) {
+        e.parentElement.style.display = (!e.parentElement.classList.contains("completed")) ? 'flex' : 'none';
     }
     showItemsLeft();
     showSelectAll();
